@@ -13,6 +13,37 @@ size_t GetRightChild(size_t parent_index);
 size_t GetParent(size_t child_index);
 
 
+template <typename T>
+void Heapify(T* array, size_t count, size_t index)
+{
+    size_t largest_index     = index;
+    size_t left_child_index  = GetLeftChild(index);
+    size_t right_child_index = GetRightChild(index);
+
+    if (left_child_index < count && array[left_child_index] > array[largest_index])
+        largest_index = left_child_index;
+
+    if (right_child_index < count && array[right_child_index] > array[largest_index])
+        largest_index = right_child_index;
+
+    if (largest_index != index)
+    {
+        Swap(&array[index], &array[largest_index]);
+        Heapify(array, count, largest_index);
+    }
+}
+
+template <typename T>
+void BuildMaxHeap(T* array, size_t count)
+{
+    // We only need to heapify from the last (bottom-right-most) parent, as heapify will
+    // swap with the children to pertain the heap property.
+    size_t last_parent = GetParent(count-1);
+    for (size_t i = last_parent; i != static_cast<size_t>(-1); --i)  // NOTE(ted): Beware of underflow.
+        Heapify(array, count, i);
+}
+
+
 // https://en.wikipedia.org/wiki/Binary_heap#Building_a_heap
 template <typename T>
 class MaxHeap

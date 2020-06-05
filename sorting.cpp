@@ -186,35 +186,68 @@ void QuickSort(T* array, size_t count)
 }
 
 
+// Time Complexity: Time complexity of heapify is O(Log n). Time complexity of BuildMaxHeap() is O(n). The overall time complexity of Heap Sort is O(n Log n).
+// Auxiliary Space: O(1)
+// Sorting In Place: No, extra space is needed for the recursion.
+// Stable: No
+// Heap sort algorithm has limited uses because Quicksort and Mergesort are better in practice.
+template <class T>
+void HeapSort(T* array, size_t count)
+{
+    if (count <= 1)
+        return;
+
+    BuildMaxHeap(array, count);
+
+    for (size_t i = count-1; i != static_cast<size_t>(-1); --i)  // NOTE(ted): Beware of underflow.
+    {
+        Swap(&array[0], &array[i]);
+        Heapify(array, i, 0);
+    }
+}
+
+
 int main()
 {
     {
+        printf("InsertionSort:  ");
         int array[] = {6, 3, 2, 0, 1, 5, 8, 7, 9, 4};
         InsertionSort(array, ARRAY_SIZE(array));
         PrintArray(array, ARRAY_SIZE(array));
     }
 
     {
+        printf("BubbleSort:     ");
         int array[] = {6, 3, 2, 0, 1, 5, 8, 7, 9, 4};
         BubbleSort(array, ARRAY_SIZE(array));
         PrintArray(array, ARRAY_SIZE(array));
     }
 
     {
+        printf("SelectionSort:  ");
         int array[] = {6, 3, 2, 0, 1, 5, 8, 7, 9, 4};
         SelectionSort(array, ARRAY_SIZE(array));
         PrintArray(array, ARRAY_SIZE(array));
     }
 
     {
+        printf("MergeSort:      ");
         int array[] = {6, 3, 2, 0, 1, 5, 8, 7, 9, 4};
         MergeSort(array,  ARRAY_SIZE(array));
         PrintArray(array, ARRAY_SIZE(array));
     }
 
     {
+        printf("QuickSort:      ");
         int array[] = {6, 3, 2, 0, 1, 5, 8, 7, 9, 4};
         QuickSort(array,  ARRAY_SIZE(array));
+        PrintArray(array, ARRAY_SIZE(array));
+    }
+
+    {
+        printf("HeapSort:       ");
+        int array[] = {6, 3, 2, 0, 1, 5, 8, 7, 9, 4};
+        HeapSort(array,   ARRAY_SIZE(array));
         PrintArray(array, ARRAY_SIZE(array));
     }
 }
