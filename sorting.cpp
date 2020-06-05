@@ -35,8 +35,8 @@ void InsertionSort(T* array, size_t count)
 
 // Worst and Average Case Time Complexity: O(n*n). Worst case occurs when array is reverse sorted.
 // Best Case Time Complexity: O(n). Best case occurs when array is already sorted.
-// Auxiliary Space: O(1)
 // Boundary Cases: Bubble sort takes minimum time (Order of n) when elements are already sorted.
+// Auxiliary Space: O(1)
 // Sorting In Place: Yes
 // Stable: Yes
 template <class T>
@@ -65,10 +65,9 @@ void BubbleSort(T* array, size_t count)
 
 
 // Time Complexity: O(n2) as there are two nested loops.
-// Auxiliary Space: O(1)
-// The good thing about selection sort is it never makes more than O(n) swaps and can be useful when memory write is a costly operation.
-// Stability : The default implementation is not stable. However it can be made stable. Please see stable selection sort for details.
-// In Place : Yes, it does not require extra space.
+// Auxiliary Space: O(1). The good thing about selection sort is it never makes more than O(n) swaps and can be useful when memory write is a costly operation.
+// Stable: No, but can be made.
+// Sorting In Place: Yes.
 template <class T>
 void SelectionSort(T* array, size_t count)
 {
@@ -207,6 +206,37 @@ void HeapSort(T* array, size_t count)
 }
 
 
+// Time Complexity: O(n^2)
+// Auxiliary Space: O(1)
+// Sorting In Place: Yes
+// Stable: No
+//
+template <class T>
+void ShellSort(T* array, size_t count)
+{
+    // h_k = ceil(h'_k) where h'_k = 2.25 * h'_{k-1} + 1, and h'_1 = 1
+    size_t gaps[] = { 701, 301, 132, 57, 1, 4, 10, 23 };
+
+    for (size_t gap = count / 2; gap > 0; gap /= 2)
+    {
+        for (size_t i = gap; i < count; ++i)
+        {
+            T element = array[i];
+
+            size_t j = i;
+            while (j >= gap && array[j - gap] > element)
+            {
+                array[j] = array[j - gap];
+                j -= gap;
+            }
+
+            array[j] = element;
+        }
+    }
+}
+
+
+
 int main()
 {
     {
@@ -248,6 +278,12 @@ int main()
         printf("HeapSort:       ");
         int array[] = {6, 3, 2, 0, 1, 5, 8, 7, 9, 4};
         HeapSort(array,   ARRAY_SIZE(array));
+        PrintArray(array, ARRAY_SIZE(array));
+    }
+    {
+        printf("ShellSort:      ");
+        int array[] = {6, 3, 2, 0, 1, 5, 8, 7, 9, 4};
+        ShellSort(array,  ARRAY_SIZE(array));
         PrintArray(array, ARRAY_SIZE(array));
     }
 }
