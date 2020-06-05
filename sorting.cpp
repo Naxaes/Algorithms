@@ -1,24 +1,7 @@
 #include <iostream>
 
-#define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
-
-template <class T>
-inline void Swap(T* a, T* b)
-{
-    T temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
-template <class T>
-inline void Copy(T* array_a, size_t count_a, T* array_b, size_t count_b)
-{
-    assert(count_a <= count_b);
-
-    for (size_t i = 0; i < count_a; ++i)
-        array_a[i] = array_b[i];
-}
-
+#include "utilities.h"
+#include "data_structures/heap.h"
 
 
 // Time Complexity: O(n*2)
@@ -200,14 +183,6 @@ template <class T>
 void QuickSort(T* array, size_t count)
 {
     QuickSortHelper(array, 0, count);
-}
-
-
-void PrintArray(int* array, size_t count)
-{
-    for (size_t i = 0; i < count-1; ++i)
-        printf("%d ", array[i]);
-    printf("%d\n", array[count-1]);
 }
 
 

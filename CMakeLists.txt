@@ -3,4 +3,5 @@ project(Algorithms)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(Algorithms sorting.cpp)
+add_executable(Sorting sorting.cpp utilities.cpp)
+add_executable(Heap data_structures/heap.cpp)
