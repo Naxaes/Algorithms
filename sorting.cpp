@@ -267,16 +267,13 @@ void CountingSort(T* array, size_t count)
         array[counter[x]] = x;
         counter[x] += 1;
     }
-
-    delete[] counter;
-    delete[] input;
 }
 
 
 template <class T>
 void BucketSort(T* array, size_t count, size_t bucket_count)
 {
-    auto* buckets = new DynamicArray<T>[bucket_count];
+    auto buckets = make_unique<DynamicArray<T>[]>(count);
 
     auto maximum = Max(array, count);
 
@@ -288,13 +285,13 @@ void BucketSort(T* array, size_t count, size_t bucket_count)
     {
         size_t bucket_index = GetBucketIndex(array[i], bucket_count);
 
-        DynamicArray<T>& bucket = buckets[bucket_index];
+        DynamicArray<T>& bucket = buckets.get()[bucket_index];
         bucket.Add(&array[i], 1);
     }
 
     for (size_t i = 0; i < bucket_count; ++i)
     {
-        DynamicArray<T>& bucket = buckets[i];
+        DynamicArray<T>& bucket = buckets.get()[i];
         InsertionSort(bucket.data.get(), bucket.count);
     }
 
