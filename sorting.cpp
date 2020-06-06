@@ -236,6 +236,41 @@ void ShellSort(T* array, size_t count)
 }
 
 
+template <class T>
+void CountingSort(T* array, size_t count)
+{
+    const auto& [minimum, maximum] = MinMax(array, count);
+
+    size_t k = maximum - minimum + 1;
+
+    auto* counter = new size_t[k];
+    memset(counter, 0, k * sizeof(size_t));
+
+    auto* input = new T[k];
+    memcpy(input, array, count * sizeof(T));
+
+    for (size_t i = 0; i < count; ++i)
+        counter[input[i] - minimum] += 1;
+
+    size_t total = 0;
+    for (size_t i = 0; i < k; ++i)
+    {
+        T temp = counter[i];
+        counter[i] = total;
+        total += temp;
+    }
+
+    for (size_t i = 0; i < count; ++i)
+    {
+        size_t x = input[i] - minimum;
+        array[counter[x]] = x;
+        counter[x] += 1;
+    }
+
+    delete[] counter;
+    delete[] input;
+}
+
 
 int main()
 {
@@ -284,6 +319,12 @@ int main()
         printf("ShellSort:      ");
         int array[] = {6, 3, 2, 0, 1, 5, 8, 7, 9, 4};
         ShellSort(array,  ARRAY_SIZE(array));
+        PrintArray(array, ARRAY_SIZE(array));
+    }
+    {
+        printf("CountingSort:   ");
+        int array[] = {6, 3, 2, 0, 1, 5, 8, 7, 9, 4};
+        CountingSort(array,  ARRAY_SIZE(array));
         PrintArray(array, ARRAY_SIZE(array));
     }
 }

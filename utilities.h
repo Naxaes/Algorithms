@@ -23,4 +23,19 @@ inline void Copy(T* array_a, size_t count_a, T* array_b, size_t count_b)
         array_a[i] = array_b[i];
 }
 
+template <class T>
+inline std::pair<T, T> MinMax(T* array, size_t count)
+{
+    T minimum = array[0];
+    T maximum = array[0];
+
+    for (size_t i = 0; i < count; ++i)
+        if (array[i] < minimum)
+            minimum = array[i];
+        else if (array[i] > maximum)
+            maximum = array[i];
+
+    return { minimum, maximum };
+}
+
 void PrintArray(int* array, size_t count);
