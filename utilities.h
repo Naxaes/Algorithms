@@ -38,4 +38,24 @@ inline std::pair<T, T> MinMax(T* array, size_t count)
     return { minimum, maximum };
 }
 
+template <class T>
+inline T Min(T* array, size_t count)
+{
+    T minimum = array[0];
+    for (size_t i = 0; i < count; ++i)
+        if (array[i] < minimum)
+            minimum = array[i];
+    return minimum;
+}
+
+template <class T>
+inline T Max(T* array, size_t count)
+{
+    T maximum = array[0];
+    for (size_t i = 0; i < count; ++i)
+        if (array[i] > maximum)
+            maximum = array[i];
+    return maximum;
+}
+
 void PrintArray(int* array, size_t count);

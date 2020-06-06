@@ -39,7 +39,7 @@ void BuildMaxHeap(T* array, size_t count)
     // We only need to heapify from the last (bottom-right-most) parent, as heapify will
     // swap with the children to pertain the heap property.
     size_t last_parent = GetParent(count-1);
-    for (size_t i = last_parent; i != static_cast<size_t>(-1); --i)  // NOTE(ted): Beware of underflow.
+    for (size_t i = last_parent + 1; i--; )  // NOTE(ted): Beware of underflow.
         Heapify(array, count, i);
 }
 

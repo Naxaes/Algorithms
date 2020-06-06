@@ -1,7 +1,8 @@
-#include <iostream>
+#include <new>
 
 #include "utilities.h"
 #include "data_structures/heap.h"
+#include "data_structures/dynamic_array.h"
 
 
 // Time Complexity: O(n*2)
@@ -198,7 +199,7 @@ void HeapSort(T* array, size_t count)
 
     BuildMaxHeap(array, count);
 
-    for (size_t i = count-1; i != static_cast<size_t>(-1); --i)  // NOTE(ted): Beware of underflow.
+    for (size_t i = count; i--; )  // NOTE(ted): Beware of underflow.
     {
         Swap(&array[0], &array[i]);
         Heapify(array, i, 0);
@@ -272,6 +273,41 @@ void CountingSort(T* array, size_t count)
 }
 
 
+template <class T>
+void BucketSort(T* array, size_t count, size_t bucket_count)
+{
+    auto* buckets = new DynamicArray<T>[bucket_count];
+
+    auto maximum = Max(array, count);
+
+    // Adding a small amount so that 'GetBucketIndex' doesn't return index = bucket_count.
+    const float divisor = float(maximum) + 0.0001f;
+    const auto GetBucketIndex = [&divisor](T element, size_t bucket_count) { return size_t((element / divisor) * bucket_count); };
+
+    for (size_t i = 0; i < count; ++i)
+    {
+        size_t bucket_index = GetBucketIndex(array[i], bucket_count);
+
+        DynamicArray<T>& bucket = buckets[bucket_index];
+        bucket.Add(&array[i], 1);
+    }
+
+    for (size_t i = 0; i < bucket_count; ++i)
+    {
+        DynamicArray<T>& bucket = buckets[i];
+        InsertionSort(bucket.data.get(), bucket.count);
+    }
+
+    size_t index = 0;
+    for (size_t i = 0; i < bucket_count; ++i)
+    {
+        DynamicArray<T>& bucket = buckets[i];
+        for (size_t j = 0; j < bucket.count; ++j)
+            array[index++] = bucket[j];
+    }
+}
+
+
 int main()
 {
     {
@@ -325,6 +361,12 @@ int main()
         printf("CountingSort:   ");
         int array[] = {6, 3, 2, 0, 1, 5, 8, 7, 9, 4};
         CountingSort(array,  ARRAY_SIZE(array));
+        PrintArray(array, ARRAY_SIZE(array));
+    }
+    {
+        printf("BucketSort:     ");
+        int array[] = {6, 3, 2, 0, 1, 5, 8, 7, 9, 4};
+        BucketSort(array, ARRAY_SIZE(array), 3);
         PrintArray(array, ARRAY_SIZE(array));
     }
 }
