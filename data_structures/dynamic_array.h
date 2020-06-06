@@ -7,17 +7,14 @@ using std::make_unique;
 
 
 template <class T>
-struct DynamicArray
+class DynamicArray
 {
+public:
     constexpr static size_t INITIAL_CAPACITY = 8;
 
-    unique_ptr<T[]> data;
-    size_t count;
-    size_t capacity;
-
     DynamicArray() : data(make_unique<T[]>(INITIAL_CAPACITY)), count(0), capacity(INITIAL_CAPACITY) {}
-    DynamicArray(size_t capacity) : data(make_unique<T[]>(capacity)), count(0), capacity(capacity) {}
-    DynamicArray(T* data, size_t count) : data(make_unique<T[]>(count)), count(count), capacity(count)
+    explicit DynamicArray(size_t capacity) : data(make_unique<T[]>(capacity)), count(0),    capacity(capacity) {}
+    DynamicArray(T* data, size_t count)    : data(make_unique<T[]>(count)),    count(count), capacity(count)
     {
         for (size_t i = 0; i < count; ++i)
             this->data.get()[i] = data[i];
@@ -43,6 +40,9 @@ struct DynamicArray
         this->data = std::move(new_storage);
     }
 
+    inline T* Raw() { return this->data.get(); }
+    [[nodiscard]] inline size_t Count() const noexcept { return this->count; }
+
     T& operator[] (size_t index) const
     {
         if (0 <= index && index < this->count)
@@ -51,4 +51,8 @@ struct DynamicArray
             throw std::runtime_error("Index out of bounds.");
     }
 
+private:
+    unique_ptr<T[]> data;
+    size_t count;
+    size_t capacity;
 };

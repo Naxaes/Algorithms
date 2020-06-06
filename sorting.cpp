@@ -292,14 +292,14 @@ void BucketSort(T* array, size_t count, size_t bucket_count)
     for (size_t i = 0; i < bucket_count; ++i)
     {
         DynamicArray<T>& bucket = buckets.get()[i];
-        InsertionSort(bucket.data.get(), bucket.count);
+        InsertionSort(bucket.Raw(), bucket.Count());
     }
 
     size_t index = 0;
     for (size_t i = 0; i < bucket_count; ++i)
     {
         DynamicArray<T>& bucket = buckets[i];
-        for (size_t j = 0; j < bucket.count; ++j)
+        for (size_t j = 0; j < bucket.Count(); ++j)
             array[index++] = bucket[j];
     }
 }

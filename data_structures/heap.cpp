@@ -1,7 +1,4 @@
-#include <memory>
-
 #include "../utilities.h"
-#include "heap.h"
 
 
 size_t GetLeftChild(size_t parent_index)
