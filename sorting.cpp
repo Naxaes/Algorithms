@@ -285,13 +285,13 @@ void BucketSort(T* array, size_t count, size_t bucket_count)
     {
         size_t bucket_index = GetBucketIndex(array[i], bucket_count);
 
-        DynamicArray<T>& bucket = buckets.get()[bucket_index];
+        DynamicArray<T>& bucket = buckets[bucket_index];
         bucket.Add(&array[i], 1);
     }
 
     for (size_t i = 0; i < bucket_count; ++i)
     {
-        DynamicArray<T>& bucket = buckets.get()[i];
+        DynamicArray<T>& bucket = buckets[i];
         InsertionSort(bucket.Raw(), bucket.Count());
     }
 

@@ -17,7 +17,7 @@ public:
     DynamicArray(T* data, size_t count)    : data(make_unique<T[]>(count)),    count(count), capacity(count)
     {
         for (size_t i = 0; i < count; ++i)
-            this->data.get()[i] = data[i];
+            this->data[i] = data[i];
     }
 
     void Add(T* values, size_t count)
@@ -26,7 +26,7 @@ public:
             this->Reallocate();
 
         for (size_t i = 0; i < count; ++i)
-            this->data.get()[this->count++] = values[i];
+            this->data[this->count++] = values[i];
     }
 
     void Reallocate()
