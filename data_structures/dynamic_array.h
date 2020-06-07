@@ -19,6 +19,12 @@ public:
         for (size_t i = 0; i < count; ++i)
             this->data[i] = data[i];
     }
+    DynamicArray(std::initializer_list<T> data) : data(make_unique<T[]>(data.size())), count(data.size()), capacity(data.size())
+    {
+        size_t i = 0;
+        for (auto it = data.begin(); it != data.end(); ++it)
+            this->data[i] = *it;
+    }
 
     void Add(T* values, size_t count)
     {
