@@ -57,5 +57,16 @@ inline T Max(T* array, size_t count)
             maximum = array[i];
     return maximum;
 }
+template <class T>
+inline bool InRange(T value, T minimum, T maximum)
+{
+    return (minimum <= value && value < maximum);
+}
+template <class T>
+inline void BoundsCheck(T value, T minimum, T maximum)
+{
+    if (!InRange(value, minimum, maximum))
+        throw std::runtime_error("Index out of bounds");
+}
 
 void PrintArray(int* array, size_t count);

@@ -12,14 +12,14 @@ public:
     }
 
 
-    [[nodiscard]] V& Vertex(size_t i)  { return this->vertices[i]; }
-    [[nodiscard]] E& Edge(size_t i)    { return this->edges[i];    }
+    V& Vertex(size_t i)  { return this->vertices[i]; }
+    E& Edge(size_t i)    { return this->edges[i];    }
 
-    [[nodiscard]] const V& Vertex(size_t i) const { return this->vertices[i]; }
-    [[nodiscard]] const E& Edge(size_t i)   const { return this->edges[i];    }
+    const V& Vertex(size_t i) const { BoundsCheck(i, size_t(0), this->vertex_count); return this->vertices[i]; }
+    const E& Edge(size_t i)   const { BoundsCheck(i, size_t(0), this->edge_count);   return this->edges[i];    }
 
-    size_t VertexCount() { return this->vertex_count; }
-    size_t EdgeCount()   { return this->edge_count;   }
+    size_t VertexCount() const noexcept { return this->vertex_count; }
+    size_t EdgeCount()   const noexcept { return this->edge_count;   }
 
 private:
     V* vertices;
@@ -50,7 +50,7 @@ void DepthFirstSearchHelper(const Graph<V, E>& graph, V vertex, V target, T& vis
 }
 
 template <class V, class E>
-DynamicArray<V> DepthFirstSearch(Graph<V, E> graph, V target)
+DynamicArray<V> DepthFirstSearch(const Graph<V, E>& graph, V target)
 {
     auto visited = make_unique<bool[]>(graph.VertexCount());
     auto path    = DynamicArray<V>();
@@ -86,7 +86,5 @@ int main()
     Graph<Node, Edge> graph(vertices, ARRAY_SIZE(vertices), edges, ARRAY_SIZE(edges));
     DynamicArray<Node> path = DepthFirstSearch(graph, Node(9));
 
-    for (size_t i = 0; i < path.Count() - 1; ++i)
-        printf("%zi ", path[i]);
-    printf("%zi ", path[path.Count() - 1]);
+    PrintArray((int *)path.Raw(), path.Count());
 }
