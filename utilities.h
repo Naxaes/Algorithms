@@ -1,7 +1,8 @@
 #pragma once
 
-#include <cstddef>
+#include <iostream>
 #include <stdexcept>
+#include <cstddef>
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 
@@ -69,4 +70,10 @@ inline void BoundsCheck(T value, T minimum, T maximum)
         throw std::runtime_error("Index out of bounds");
 }
 
-void PrintArray(int* array, size_t count);
+template <class T>
+void PrintArray(T* array, size_t count)
+{
+    for (size_t i = 0; i < count - 1; ++i)
+        std::cout << array[i] << " ";
+    std::cout << array[count - 1] << std::endl;
+}
