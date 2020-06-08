@@ -19,14 +19,14 @@ public:
         for (size_t i = 0; i < count; ++i)
             this->data[i] = data[i];
     }
-    DynamicArray(std::initializer_list<T> data) : data(make_unique<T[]>(data.size())), count(data.size()), capacity(data.size())
+    DynamicArray(const std::initializer_list<T>& data) : data(make_unique<T[]>(data.size())), count(data.size()), capacity(data.size())
     {
         size_t i = 0;
         for (auto it = data.begin(); it != data.end(); ++it)
-            this->data[i] = *it;
+            this->data[i++] = *it;
     }
 
-    void Add(T* values, size_t count)
+    void Add(const T* values, size_t count)
     {
         if (this->count + count > this->capacity)
             this->Reallocate();
@@ -46,7 +46,9 @@ public:
         this->data = std::move(new_storage);
     }
 
-    inline T* Raw() { return this->data.get(); }
+    inline       T* Raw()       noexcept { return this->data.get(); }
+    inline const T* Raw() const noexcept { return this->data.get(); }
+
     [[nodiscard]] inline size_t Count() const noexcept { return this->count; }
 
     T& operator[] (size_t index) const

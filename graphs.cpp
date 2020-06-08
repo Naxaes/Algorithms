@@ -1,5 +1,7 @@
-#include "data_structures/dynamic_array.h"
 #include "utilities.h"
+#include "data_structures/dynamic_array.h"
+#include "data_structures/queue.h"
+#include "data_structures/stack.h"
 
 
 template <class V, class E>
@@ -31,31 +33,107 @@ private:
 
 
 
+template <class T>
+struct Node
+{
+    Node<T>* parent;
+    T        value;
+
+    Node() = default;
+    Node(Node<T>* parent, T value) : parent(parent), value(value) {}
+    Node<T>& operator= (const Node<T>& other)
+    {
+        if (&other != this)
+        {
+            this->parent = other.parent;
+            this->value  = other.value;
+        }
+
+        return *this;
+    }
+};
+
 
 template <class V, class E, class T>
-void DepthFirstSearchHelper(const Graph<V, E>& graph, V vertex, V target, T& visited, DynamicArray<V>& path)
+void DepthFirstSearchHelper(const Graph<V, E>& graph, V vertex, V target, T& visited, DynamicArray<V>& path, bool& found)
 {
     if (visited[vertex])
         return;
     else
         visited[vertex] = true;
 
-    path.Add(&vertex, 1);
+    if (vertex == target)
+    {
+        found = true;
+        return;
+    }
 
     auto& neighbours = graph.Edge(vertex);
     for (size_t j = 0; j < neighbours.Count(); ++j)
     {
-        DepthFirstSearchHelper(graph, neighbours[j], target, visited, path);
+        DepthFirstSearchHelper(graph, neighbours[j], target, visited, path, found);
+        if (found)
+        {
+            path.Add(&neighbours[j], 1);
+            return;
+        }
     }
 }
-
 template <class V, class E>
-DynamicArray<V> DepthFirstSearch(const Graph<V, E>& graph, V target)
+DynamicArray<V> DepthFirstSearch(const Graph<V, E>& graph, V start, V target)
 {
-    auto visited = make_unique<bool[]>(graph.VertexCount());
     auto path    = DynamicArray<V>();
+    auto visited = make_unique<bool[]>(graph.VertexCount());
 
-    DepthFirstSearchHelper(graph, graph.Vertex(0), target, visited, path);
+    bool found = false;
+    DepthFirstSearchHelper(graph, start, target, visited, path, found);
+
+    if (found)
+    {
+        path.Add(&start, 1);
+        Reverse(path.Raw(), path.Count());
+    }
+
+    return path;
+}
+
+template <template<class> class DataStructure, class V, class E>
+DynamicArray<V> BreadthFirstSearch(const Graph<V, E>& graph, V start, V target)
+{
+    auto path    = DynamicArray<V>();
+    auto visited = make_unique<bool[]>(graph.VertexCount());
+    auto queue   = DataStructure<Node<V>>(graph.VertexCount());
+
+    queue.Enqueue(nullptr, start);
+    visited[start] = true;
+
+    while (!queue.IsEmpty())
+    {
+        auto& vertex = queue.Dequeue();
+
+        if (vertex.value == target)
+        {
+            path.Add(&vertex.value, 1);
+            while (vertex.parent != nullptr)
+            {
+                vertex = *vertex.parent;
+                path.Add(&vertex.value, 1);
+            }
+
+            // Reverse so we get start to target, instead of target to start.
+            Reverse(path.Raw(), path.Count());
+
+            break;
+        }
+
+        auto& neighbours = graph.Edge(vertex.value);
+        for (size_t j = 0; j < neighbours.Count(); ++j)
+            if (!visited[neighbours[j]])
+            {
+                visited[neighbours[j]] = true;
+                queue.Enqueue(&vertex, neighbours[j]);
+            }
+    }
 
     return path;
 }
@@ -83,8 +161,15 @@ int main()
     };
 
 
-    Graph<Node, Edge> graph(vertices, ARRAY_SIZE(vertices), edges, ARRAY_SIZE(edges));
-    DynamicArray<Node> path = DepthFirstSearch(graph, Node(9));
+    const Graph<Node, Edge> graph(vertices, ARRAY_SIZE(vertices), edges, ARRAY_SIZE(edges));
 
-    PrintArray((int *)path.Raw(), path.Count());
+    {
+        DynamicArray<Node> path = DepthFirstSearch(graph, Node(0), Node(9));
+        PrintArray(path.Raw(), path.Count());
+    }
+
+    {
+        DynamicArray<Node> path = BreadthFirstSearch<Queue>(graph, Node(0), Node(9));
+        PrintArray(path.Raw(), path.Count());
+    }
 }

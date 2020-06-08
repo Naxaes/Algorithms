@@ -56,14 +56,15 @@ public:
             this->Add(array[i]);
     }
 
-    void Add(T&& value)
+    template <class ... Targs>
+    void Add(Targs&& ... args)
     {
         ++this->count;
         if (this->count >= this->max_count)
             throw std::runtime_error("Buffer overflown");
 
         size_t child_index      = this->count - 1;
-        this->data[child_index] = value;
+        this->data[child_index] = T(std::forward<Targs>(args)...);
 
         size_t parent_index = GetParent(child_index);
 

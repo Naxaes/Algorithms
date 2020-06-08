@@ -25,7 +25,14 @@ inline void Copy(T* array_a, size_t count_a, T* array_b, size_t count_b)
 }
 
 template <class T>
-inline std::pair<T, T> MinMax(T* array, size_t count)
+inline void Reverse(T* array, size_t count)
+{
+    for (size_t i = 0; i < count / 2; ++i)
+        Swap(&array[i], &array[count - i - 1]);
+}
+
+template <class T>
+inline std::pair<T, T> MinMax(const T* array, size_t count)
 {
     T minimum = array[0];
     T maximum = array[0];
@@ -40,7 +47,7 @@ inline std::pair<T, T> MinMax(T* array, size_t count)
 }
 
 template <class T>
-inline T Min(T* array, size_t count)
+inline T Min(const T* array, size_t count)
 {
     T minimum = array[0];
     for (size_t i = 0; i < count; ++i)
@@ -50,7 +57,7 @@ inline T Min(T* array, size_t count)
 }
 
 template <class T>
-inline T Max(T* array, size_t count)
+inline T Max(const T* array, size_t count)
 {
     T maximum = array[0];
     for (size_t i = 0; i < count; ++i)
@@ -71,8 +78,14 @@ inline void BoundsCheck(T value, T minimum, T maximum)
 }
 
 template <class T>
-void PrintArray(T* array, size_t count)
+void PrintArray(const T* array, size_t count)
 {
+    if (count == 0)
+    {
+        std::cout << "(empty)" << std::endl;
+        return;
+    }
+
     for (size_t i = 0; i < count - 1; ++i)
         std::cout << array[i] << " ";
     std::cout << array[count - 1] << std::endl;
